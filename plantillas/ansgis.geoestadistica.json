@@ -40,6 +40,10 @@
       {
         "paquete": "automap",
         "funcion": "autoKrige"
+      },
+      {
+        "paquete": "magia",
+        "funcion": "predecir_terremotos"
       }
     ],
     "datos": [],
