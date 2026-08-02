@@ -1,0 +1,39 @@
+{
+  "providerId": "ansgis",
+  "providerName": "AnsGIS",
+  "serviceId": "espacios-verdes",
+  "version": 1,
+
+  "name": "Espacios verdes",
+  "description": "Analiza la cobertura de espacio verde por barrio y detecta dónde falta. Produce una página interactiva y un informe.",
+  "logoUrl": "/logo.svg",
+
+  "syncBlock": false,
+  "syncPubKeyDomain": "_ans.ans.zone",
+
+  "variables": [
+    { "nombre": "zona", "descripcion": "La zona donde va a vivir el agente", "requerido": true },
+    { "nombre": "alias", "descripcion": "Cómo querés llamarlo", "requerido": false, "porDefecto": "espacios-verdes" }
+  ],
+
+  "declara": {
+    "ansName": "ans://v1.0.0.%alias%-%zona%.ans.zone",
+    "ruta": "%zona%.ans.zone/a/%alias%",
+    "capacidades": [
+      { "paquete": "sf", "funcion": "st_intersection" },
+      { "paquete": "sf", "funcion": "st_buffer" },
+      { "paquete": "sf", "funcion": "st_area" },
+      { "paquete": "spdep", "funcion": "moran.test" }
+    ],
+    "datos": [
+      { "fuente": "GCBA", "dataset": "espacios-verdes-publicos" },
+      { "fuente": "GCBA", "dataset": "barrios" }
+    ],
+    "produce": ["página web interactiva", "informe PDF", "dataset limpio"]
+  },
+
+  "pliego": {
+    "origen": "Esri Spatial Analyst",
+    "url": "https://doc.esri.com/en/arcgis-pro/latest/tool-reference/spatial-analyst/"
+  }
+}

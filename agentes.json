@@ -1,0 +1,62 @@
+{
+  "universo": "ansgis",
+  "titulo": "ANS Universe",
+  "descripcion": "El registro de agentes que hacen trabajo verificable sobre paquetes de R.",
+  "registro": "https://ans.daiacaba.com.ar/tl",
+  "diccionario": "https://diccionario.daiacaba.com.ar",
+  "runiverse": "https://emri-setup.r-universe.dev",
+
+  "agentes": [
+    {
+      "id": "comuna1",
+      "nombre": "Agente Comuna 1",
+      "ansName": "ans://v0.0.1.comuna1.ans.ar",
+      "zona": "daiacaba",
+      "descripcion": "Agente territorial de la Comuna 1 de la Ciudad de Buenos Aires. Late solo y responde por su estado.",
+      "estado_url": "https://comuna1.daiacaba.com.ar/estado",
+      "capacidades": [
+        { "paquete": "spdep", "funcion": "moran.test" },
+        { "paquete": "spdep", "funcion": "localmoran" },
+        { "paquete": "sf", "funcion": "st_intersection" },
+        { "paquete": "sf", "funcion": "st_buffer" }
+      ],
+      "obras": ["espacios-verdes", "tablero-espacios"]
+    },
+    {
+      "id": "geostat",
+      "nombre": "Agente Geoestadística",
+      "ansName": null,
+      "zona": "daiacaba",
+      "descripcion": "Interpolación y análisis geoestadístico. Declarado sobre el paquete ansgis.geostat, publicado en r-universe.",
+      "estado_url": null,
+      "capacidades": [
+        { "paquete": "gstat", "funcion": "krige" },
+        { "paquete": "gstat", "funcion": "variogram" },
+        { "paquete": "gstat", "funcion": "idw" },
+        { "paquete": "automap", "funcion": "autoKrige" }
+      ],
+      "obras": []
+    }
+  ],
+
+  "obras": [
+    {
+      "id": "espacios-verdes",
+      "titulo": "Espacios verdes públicos de la Ciudad",
+      "agente": "comuna1",
+      "url": "https://demo.daiacaba.com.ar",
+      "descripcion": "48 barrios y 2.176 espacios verdes. R recalcula la cobertura en el navegador del que consulta, sin servidor.",
+      "fecha": "2026-07-31",
+      "formato": "página web interactiva"
+    },
+    {
+      "id": "tablero-espacios",
+      "titulo": "Tablero de espacios verdes",
+      "agente": "comuna1",
+      "url": "https://dashboards.daiacaba.com.ar/tablero-rmd",
+      "descripcion": "72 líneas de R Markdown convertidas en un tablero con 11 elementos y 16 acciones. Conformidad 73,4% contra el pliego de Esri Dashboards.",
+      "fecha": "2026-08-01",
+      "formato": "R Markdown renderizado"
+    }
+  ]
+}

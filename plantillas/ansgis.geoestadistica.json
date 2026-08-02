@@ -1,0 +1,56 @@
+{
+  "providerId": "ansgis",
+  "providerName": "AnsGIS",
+  "serviceId": "geoestadistica",
+  "version": 1,
+  "name": "Geoestadística",
+  "description": "Interpola valores donde no hay mediciones: contaminación, ruido, temperatura. Devuelve un mapa continuo a partir de puntos sueltos.",
+  "logoUrl": "/logo.svg",
+  "syncBlock": false,
+  "syncPubKeyDomain": "_ans.ans.zone",
+  "variables": [
+    {
+      "nombre": "zona",
+      "descripcion": "La zona donde va a vivir el agente",
+      "requerido": true
+    },
+    {
+      "nombre": "alias",
+      "descripcion": "Cómo querés llamarlo",
+      "requerido": false,
+      "porDefecto": "geoestadistica"
+    }
+  ],
+  "declara": {
+    "ansName": "ans://v1.0.0.%alias%-%zona%.ans.zone",
+    "ruta": "%zona%.ans.zone/a/%alias%",
+    "capacidades": [
+      {
+        "paquete": "gstat",
+        "funcion": "krige"
+      },
+      {
+        "paquete": "gstat",
+        "funcion": "variogram"
+      },
+      {
+        "paquete": "gstat",
+        "funcion": "idw"
+      },
+      {
+        "paquete": "automap",
+        "funcion": "autoKrige"
+      }
+    ],
+    "datos": [],
+    "produce": [
+      "mapa continuo",
+      "página web interactiva",
+      "informe PDF"
+    ]
+  },
+  "pliego": {
+    "origen": "Esri Geostatistical Analyst",
+    "url": "https://doc.esri.com/en/arcgis-pro/latest/tool-reference/geostatistical-analyst/"
+  }
+}

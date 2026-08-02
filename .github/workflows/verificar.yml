@@ -1,0 +1,13 @@
+# Lo unico que va en el repo del registro. La maquinaria vive aparte y versionada.
+name: Verificar
+
+on:
+  pull_request:
+    paths: ["plantillas/**.json", "agentes.json"]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  verificar:
+    uses: emri-setup/ansgis-maquinaria/.github/workflows/verificar.yml@v1
