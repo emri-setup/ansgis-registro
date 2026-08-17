@@ -5,6 +5,7 @@
   "registro": "https://ans.daiacaba.com.ar/tl",
   "diccionario": "https://diccionario.daiacaba.com.ar",
   "runiverse": "https://emri-setup.r-universe.dev",
+  "verificado": "2026-08-17",
 
   "agentes": [
     {
@@ -12,8 +13,12 @@
       "nombre": "Agente Comuna 1",
       "ansName": "ans://v0.0.1.comuna1.ans.ar",
       "zona": "daiacaba",
-      "descripcion": "Agente territorial de la Comuna 1 de la Ciudad de Buenos Aires. Late solo y responde por su estado.",
+      "descripcion": "Agente territorial de la Comuna 1 de la Ciudad de Buenos Aires. Late solo y responde por su estado. Declara la seccion Espacios verdes (plantillas/ansgis.espacios-verdes.json).",
       "estado_url": "https://comuna1.daiacaba.com.ar/estado",
+      "estado_http": 200,
+      "estado_verificado": "2026-08-17",
+      "plantilla": "ansgis.espacios-verdes",
+      "repo": null,
       "capacidades": [
         { "paquete": "spdep", "funcion": "moran.test" },
         { "paquete": "spdep", "funcion": "localmoran" },
@@ -24,11 +29,16 @@
     },
     {
       "id": "geostat",
-      "nombre": "Agente Geoestadística",
+      "nombre": "Agente Geoestadistica",
       "ansName": null,
       "zona": "daiacaba",
-      "descripcion": "Interpolación y análisis geoestadístico. Declarado sobre el paquete ansgis.geostat, publicado en r-universe.",
+      "descripcion": "Interpolacion y analisis geoestadistico. Declarado sobre el paquete ansgis.geostat, publicado en r-universe. Todavia no produjo ninguna obra publicada.",
       "estado_url": null,
+      "estado_http": null,
+      "estado_verificado": "2026-08-17",
+      "plantilla": "ansgis.geoestadistica",
+      "repo": "https://github.com/emri-setup/ansgis-geostat",
+      "paquete": "ansgis.geostat",
       "capacidades": [
         { "paquete": "gstat", "funcion": "krige" },
         { "paquete": "gstat", "funcion": "variogram" },
@@ -42,21 +52,50 @@
   "obras": [
     {
       "id": "espacios-verdes",
-      "titulo": "Espacios verdes públicos de la Ciudad",
+      "titulo": "Espacios verdes publicos de la Ciudad",
       "agente": "comuna1",
       "url": "https://demo.daiacaba.com.ar",
-      "descripcion": "48 barrios y 2.176 espacios verdes. R recalcula la cobertura en el navegador del que consulta, sin servidor.",
+      "descripcion": "48 barrios y 2.176 espacios verdes. R recalcula la cobertura en el navegador del que consulta, sin servidor. CAIDA: el 17-ago-2026 la direccion devuelve HTTP 525. No se puede abrir.",
       "fecha": "2026-07-31",
-      "formato": "página web interactiva"
+      "formato": "pagina web interactiva",
+      "estado": "caida",
+      "estado_http": 525,
+      "estado_verificado": "2026-08-17"
     },
     {
       "id": "tablero-espacios",
       "titulo": "Tablero de espacios verdes",
       "agente": "comuna1",
       "url": "https://dashboards.daiacaba.com.ar/tablero-rmd",
-      "descripcion": "72 líneas de R Markdown convertidas en un tablero con 11 elementos y 16 acciones. Conformidad 73,4% contra el pliego de Esri Dashboards.",
+      "descripcion": "72 lineas de R Markdown convertidas en un tablero con 11 elementos y 16 acciones. Conformidad 73,4% contra el pliego de Esri Dashboards. CAIDA: el 17-ago-2026 la direccion devuelve HTTP 525. No se puede abrir.",
       "fecha": "2026-08-01",
-      "formato": "R Markdown renderizado"
+      "formato": "R Markdown renderizado",
+      "estado": "caida",
+      "estado_http": 525,
+      "estado_verificado": "2026-08-17"
+    }
+  ],
+
+  "huecos": [
+    {
+      "que": "Las dos unicas obras del registro estan caidas",
+      "detalle": "demo.daiacaba.com.ar y dashboards.daiacaba.com.ar devuelven 525 desde el 17-ago-2026. El registro guarda el puntero, no la obra: mientras el servidor no vuelva, no hay nada para abrir.",
+      "verificado": "2026-08-17"
+    },
+    {
+      "que": "La seccion Espacios verdes no tiene repo propio todavia",
+      "detalle": "Su declaracion vive en plantillas/ansgis.espacios-verdes.json de este mismo registro. Cuando tenga su repo copiado de emri-setup/seccion-plantilla, se completa el campo repo del agente comuna1.",
+      "verificado": "2026-08-17"
+    },
+    {
+      "que": "El porton no verifica agentes.json, solo plantillas/",
+      "detalle": "scripts/verificar.py de la maquinaria lee la carpeta plantillas/. Las capacidades que declara cada agente en este archivo se comprobaron a mano el 17-ago-2026 (las 8 dan 200 en el diccionario), pero no las controla la Action.",
+      "verificado": "2026-08-17"
+    },
+    {
+      "que": "El diccionario cubre 19 paquetes",
+      "detalle": "Todo lo que no este ahi no se puede declarar como capacidad. leaflet::leaflet y gt::gt dan 404: lo que se dibuja con ellos va como presentacion en el recibo de la obra, no como capacidad.",
+      "verificado": "2026-08-17"
     }
   ]
 }
