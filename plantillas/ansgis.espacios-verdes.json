@@ -1,35 +1,83 @@
 {
+  "$comentario": "LA UNICA COPIA. Formato Domain Connect: el archivo se llama <providerId>.<serviceId>.json y el porton de ansgis-maquinaria verifica cada capacidad contra el diccionario vivo. La seccion NO guarda una copia de este archivo: lo lee de aca por URL. Hasta el 17-ago-2026 habia tres listas distintas de capacidades (esta, la de la seccion y la de agentes.json) y no coincidian; ahora manda esta y el porton bloquea al agente que se atribuya algo que no este aca.",
+
   "providerId": "ansgis",
   "providerName": "AnsGIS",
   "serviceId": "espacios-verdes",
-  "version": 1,
+  "version": 2,
 
-  "name": "Espacios verdes",
-  "description": "Analiza la cobertura de espacio verde por barrio y detecta dónde falta. Produce una página interactiva y un informe.",
+  "name": "Espacios verdes de la comuna",
+  "description": "Mide cuanto espacio verde publico tiene cada barrio de la comuna, muestra donde falta y publica el resultado con el recibo de como se calculo.",
   "logoUrl": "/logo.svg",
 
   "syncBlock": false,
   "syncPubKeyDomain": "_ans.ans.zone",
+  "$sobre_syncPubKeyDomain": "DECLARADO, TODAVIA NO PUBLICADO. Al 17-ago-2026 _ans.ans.zone da NXDOMAIN: la clave publica de sincronizacion no esta en el DNS. Domain Connect exige este campo para poder firmar, pero mientras el registro TXT no exista, ninguna firma de sincronizacion se puede verificar contra el. Ver huecos[] de agentes.json.",
 
   "variables": [
-    { "nombre": "zona", "descripcion": "La zona donde va a vivir el agente", "requerido": true },
-    { "nombre": "alias", "descripcion": "Cómo querés llamarlo", "requerido": false, "porDefecto": "espacios-verdes" }
+    { "nombre": "zona", "descripcion": "La zona donde vive la seccion", "requerido": true, "ejemplo": "comuna1.ans.zone" },
+    { "nombre": "alias", "descripcion": "Como se la llama", "requerido": false, "porDefecto": "espacios-verdes" },
+    { "nombre": "comuna", "descripcion": "Numero de comuna que se analiza", "requerido": true, "ejemplo": "1" }
   ],
 
   "declara": {
     "ansName": "ans://v1.0.0.%alias%-%zona%.ans.zone",
     "ruta": "%zona%.ans.zone/a/%alias%",
+
+    "$sobre_capacidades": "Las seis que la seccion sabe usar. `usada: true` son las tres que produjeron los numeros de la obra publicada (coinciden exactas con metodo.calculo del recibo). Las otras tres estan declaradas y respaldadas por el diccionario, pero esta obra no las llamo.",
     "capacidades": [
-      { "paquete": "sf", "funcion": "st_intersection" },
-      { "paquete": "sf", "funcion": "st_buffer" },
-      { "paquete": "sf", "funcion": "st_area" },
-      { "paquete": "spdep", "funcion": "moran.test" }
+      { "paquete": "sf", "funcion": "st_read", "para": "abrir el GeoJSON del GCBA", "usada": true },
+      { "paquete": "sf", "funcion": "st_transform", "para": "pasar a un sistema en metros antes de medir", "usada": true },
+      { "paquete": "sf", "funcion": "st_area", "para": "superficie de cada espacio verde y de cada barrio", "usada": true },
+      { "paquete": "sf", "funcion": "st_intersection", "para": "recortar los espacios que cruzan el limite de un barrio", "usada": false },
+      { "paquete": "spdep", "funcion": "poly2nb", "para": "armar la lista de barrios vecinos", "usada": false },
+      { "paquete": "spdep", "funcion": "moran.test", "para": "decir si el verde esta concentrado o repartido", "usada": false }
     ],
+
     "datos": [
-      { "fuente": "GCBA", "dataset": "espacios-verdes-publicos" },
-      { "fuente": "GCBA", "dataset": "barrios" }
+      {
+        "fuente": "GCBA",
+        "dataset": "espacio_verde_publico",
+        "url": "https://cdn.buenosaires.gob.ar/datosabiertos/datasets/secretaria-de-desarrollo-urbano/espacios-verdes/espacio_verde_publico.geojson",
+        "organismo": "Secretaria de Desarrollo Urbano",
+        "licencia": "Datos abiertos GCBA"
+      },
+      {
+        "fuente": "GCBA",
+        "dataset": "barrios",
+        "url": "https://cdn.buenosaires.gob.ar/datosabiertos/datasets/ministerio-de-educacion/barrios/barrios.geojson",
+        "organismo": "Ministerio de Educacion",
+        "para": "el denominador: la superficie de cada barrio",
+        "licencia": "Datos abiertos GCBA"
+      }
     ],
-    "produce": ["página web interactiva", "informe PDF", "dataset limpio"]
+
+    "produce": ["pagina web interactiva", "recibo verificable", "dataset limpio"],
+
+    "$sobre_presentacion": "Lo que dibuja el resultado NO es una capacidad: leaflet::leaflet y gt::gt dan 404 en el diccionario (cubre 19 paquetes). Van como presentacion en el recibo de la obra, nunca como capacidad declarada, porque el porton no las puede respaldar.",
+    "presentacion": ["leaflet::leaflet", "gt::gt", "quarto::quarto_render", "ansgis.storymaps::historia"],
+
+    "herramientas": [
+      { "cli": "ansgis.storymaps", "version": "0.1.0", "universo": null, "donde": "taller (contenedor R 4.3.3)", "nota": "todavia no publicado en emri-setup.r-universe.dev" },
+      { "cli": "ansgis.geostat", "version": "0.0.1", "universo": "https://emri-setup.r-universe.dev", "donde": "universo + navegador (binario wasm R 4.6.0)" }
+    ],
+
+    "obras": [
+      {
+        "id": "comuna-1-cobertura-verde",
+        "titulo": "Cobertura de espacio verde en la Comuna 1",
+        "estado": "borrador — espera aprobacion humana",
+        "fecha": "2026-08-14",
+        "entrega": "obras/comuna-1-cobertura-verde/entrega.html",
+        "recibo": "obras/comuna-1-cobertura-verde/recibo.json",
+        "verificacion": "obras/comuna-1-cobertura-verde/verificacion.txt",
+        "firma": { "quien": "Emir Rivas", "canal": "issue aprobar-obra", "firmada_el": null },
+        "calculada_con": ["sf::st_read", "sf::st_transform", "sf::st_area"],
+        "presentada_con": ["leaflet::leaflet", "gt::gt", "quarto::quarto_render", "ansgis.storymaps::historia"],
+        "anotada_en_el_log": false,
+        "$por_que_no_anotada": "El log de ANS (ans.daiacaba.com.ar/tl) solo define eventos de ciclo de vida de agente: AGENT_REGISTERED / ACTIVATED / DEPRECATED / REVOKED / RENEWED y CERT_REQUESTED / ISSUED / REVOKED (internal/domain/events.go del repo ans). No existe un tipo de evento para una obra ni para un recibo, asi que esta obra no puede entrar al log sin extender el spec ANS-4."
+      }
+    ]
   },
 
   "pliego": {

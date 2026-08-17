@@ -2,7 +2,9 @@
   "universo": "ansgis",
   "titulo": "ANS Universe",
   "descripcion": "El registro de agentes que hacen trabajo verificable sobre paquetes de R.",
-  "registro": "https://ans.daiacaba.com.ar/tl",
+
+  "$sobre_el_registro": "ans.daiacaba.com.ar/tl es un LOG DE REGISTRO DE AGENTES, no un libro de recibos. Solo acepta eventos de ciclo de vida de agente (AGENT_REGISTERED / ACTIVATED / DEPRECATED / REVOKED / RENEWED y CERT_REQUESTED / ISSUED / REVOKED). Ninguna obra ni ningun recibo esta anotado ahi, y con el spec ANS-4 de hoy no puede estarlo. Ver huecos[].",
+  "registro_agentes": "https://ans.daiacaba.com.ar/tl",
   "diccionario": "https://diccionario.daiacaba.com.ar",
   "runiverse": "https://emri-setup.r-universe.dev",
   "verificado": "2026-08-17",
@@ -11,19 +13,35 @@
     {
       "id": "comuna1",
       "nombre": "Agente Comuna 1",
-      "ansName": "ans://v0.0.1.comuna1.ans.ar",
+
+      "$sobre_el_nombre": "UN SOLO NOMBRE. Hasta el 17-ago-2026 este agente tenia tres: el log decia ans://v1.0.0.agente-comuna1.daiacaba.com.ar (ese host da 525 y nunca levanto), este archivo decia ans://v0.0.1.comuna1.ans.ar (ans.ar no existe: NXDOMAIN) y la demo decia comuna1.ans.zone (NXDOMAIN). El unico host que contesta es comuna1.daiacaba.com.ar, asi que el nombre se ancla ahi.",
+      "ansName": "ans://v1.0.0.comuna1.daiacaba.com.ar",
+      "nombres_viejos": [
+        { "ansName": "ans://v1.0.0.agente-comuna1.daiacaba.com.ar", "donde": "las 6 entradas del log", "host_hoy": 525 },
+        { "ansName": "ans://v0.0.1.comuna1.ans.ar", "donde": "este archivo hasta el 17-ago-2026", "host_hoy": "NXDOMAIN" }
+      ],
+
       "zona": "daiacaba",
-      "descripcion": "Agente territorial de la Comuna 1 de la Ciudad de Buenos Aires. Late solo y responde por su estado. Declara la seccion Espacios verdes (plantillas/ansgis.espacios-verdes.json).",
+      "que_es": "latido + carta + verificador",
+      "descripcion": "Agente territorial de la Comuna 1 de la Ciudad de Buenos Aires. Publica su carta ANS, verifica identidad con el verificador oficial en wasm y late solo. NO ejecuta las capacidades de R que declara: esas las corre el taller y quedan en el recibo de cada obra.",
+
       "estado_url": "https://comuna1.daiacaba.com.ar/estado",
       "estado_http": 200,
+      "carta_url": "https://comuna1.daiacaba.com.ar/.well-known/agent-card.json",
+      "carta_http": 200,
       "estado_verificado": "2026-08-17",
+
       "plantilla": "ansgis.espacios-verdes",
       "repo": null,
+
+      "$sobre_capacidades": "Son EXACTAMENTE las seis de plantillas/ansgis.espacios-verdes.json, ni una mas. El porton (scripts/verificar.py de ansgis-maquinaria) bloquea el PR si este agente se atribuye algo que su plantilla no declare. Antes declaraba spdep::localmoran y sf::st_buffer, que la seccion no declara, y omitia sf::st_read y sf::st_transform, que son dos de las tres que produjeron los numeros.",
       "capacidades": [
-        { "paquete": "spdep", "funcion": "moran.test" },
-        { "paquete": "spdep", "funcion": "localmoran" },
+        { "paquete": "sf", "funcion": "st_read" },
+        { "paquete": "sf", "funcion": "st_transform" },
+        { "paquete": "sf", "funcion": "st_area" },
         { "paquete": "sf", "funcion": "st_intersection" },
-        { "paquete": "sf", "funcion": "st_buffer" }
+        { "paquete": "spdep", "funcion": "poly2nb" },
+        { "paquete": "spdep", "funcion": "moran.test" }
       ],
       "obras": ["espacios-verdes", "tablero-espacios"]
     },
@@ -32,7 +50,8 @@
       "nombre": "Agente Geoestadistica",
       "ansName": null,
       "zona": "daiacaba",
-      "descripcion": "Interpolacion y analisis geoestadistico. Declarado sobre el paquete ansgis.geostat, publicado en r-universe. Todavia no produjo ninguna obra publicada.",
+      "que_es": "declaracion sin agente corriendo",
+      "descripcion": "Interpolacion y analisis geoestadistico. Declarado sobre el paquete ansgis.geostat, publicado en r-universe. Todavia no produjo ninguna obra publicada y no tiene ningun host que conteste.",
       "estado_url": null,
       "estado_http": null,
       "estado_verificado": "2026-08-17",
@@ -55,41 +74,69 @@
       "titulo": "Espacios verdes publicos de la Ciudad",
       "agente": "comuna1",
       "url": "https://demo.daiacaba.com.ar",
-      "descripcion": "48 barrios y 2.176 espacios verdes. R recalcula la cobertura en el navegador del que consulta, sin servidor. CAIDA: el 17-ago-2026 la direccion devuelve HTTP 525. No se puede abrir.",
+      "descripcion": "48 barrios y 2.176 espacios verdes. R recalcula la cobertura en el navegador del que consulta, sin servidor.",
       "fecha": "2026-07-31",
       "formato": "pagina web interactiva",
       "estado": "caida",
       "estado_http": 525,
-      "estado_verificado": "2026-08-17"
+      "caida_desde": "2026-08-17",
+      "estado_verificado": "2026-08-17",
+      "$se_puede_abrir": false
     },
     {
       "id": "tablero-espacios",
       "titulo": "Tablero de espacios verdes",
       "agente": "comuna1",
       "url": "https://dashboards.daiacaba.com.ar/tablero-rmd",
-      "descripcion": "72 lineas de R Markdown convertidas en un tablero con 11 elementos y 16 acciones. Conformidad 73,4% contra el pliego de Esri Dashboards. CAIDA: el 17-ago-2026 la direccion devuelve HTTP 525. No se puede abrir.",
+      "descripcion": "72 lineas de R Markdown convertidas en un tablero con 11 elementos y 16 acciones. Conformidad 73,4% contra el pliego de Esri Dashboards.",
       "fecha": "2026-08-01",
       "formato": "R Markdown renderizado",
       "estado": "caida",
       "estado_http": 525,
-      "estado_verificado": "2026-08-17"
+      "caida_desde": "2026-08-17",
+      "estado_verificado": "2026-08-17",
+      "$se_puede_abrir": false
     }
   ],
 
+  "$sobre_el_pedido": "El alta de una seccion se pide por issue en este mismo repo. El boton del catalogo (universo.ans.zone) arma el nombre ANS y abre el molde ya cargado. Es la unica entrada del circuito que existe hoy: no hay formulario ni buzon.",
+  "pedido": {
+    "canal": "issue",
+    "url": "https://github.com/emri-setup/ansgis-registro/issues/new?template=alta-de-seccion.yml",
+    "molde": ".github/ISSUE_TEMPLATE/alta-de-seccion.yml"
+  },
+
   "huecos": [
     {
+      "que": "El log de ANS no puede contener recibos de obra",
+      "detalle": "ans.daiacaba.com.ar/tl solo define ocho tipos de evento y los ocho son de ciclo de vida de agente o de certificado (internal/domain/events.go del repo agentnameservice/ans). No hay tipo OBRA ni RECIBO. Sus 6 entradas actuales son AGENT_REGISTERED de prueba, de 2 agentes repetidos, emitidas el 01 y el 03-ago-2026 por una autoridad que corria en localhost. El checkpoint quedo congelado en 2026-08-03 12:06 UTC. Para que una obra entre hay que extender ANS-4 con un tipo de evento nuevo; mientras tanto el recibo es un JSON al lado del archivo, con su sha256, y no es inviolable.",
+      "verificado": "2026-08-17",
+      "bloqueado_por": "spec ANS-4 upstream"
+    },
+    {
+      "que": "Las atestaciones DNS de las 6 entradas del log son falsas",
+      "detalle": "Cada entrada lleva attestations.dnsRecordsProvisioned con registros SVCB, TXT y TLSA que hoy no existen (NOERROR SIN REGISTRO en dns.google). La causa esta identificada: la autoridad corrio con dns: {type: noop} y el NoopVerifier del upstream 'always reports all records as verified... It must NOT be used in any environment where trust claims depend on DNS verification'. La configuracion ya se paso a dns: {type: lookup}, asi que ninguna entrada nueva puede firmarse sin que los registros existan de verdad. Las 6 viejas no se pueden borrar: el log es de solo agregar.",
+      "verificado": "2026-08-17",
+      "corregido_para_el_futuro": true
+    },
+    {
       "que": "Las dos unicas obras del registro estan caidas",
-      "detalle": "demo.daiacaba.com.ar y dashboards.daiacaba.com.ar devuelven 525 desde el 17-ago-2026. El registro guarda el puntero, no la obra: mientras el servidor no vuelva, no hay nada para abrir.",
+      "detalle": "demo.daiacaba.com.ar y dashboards.daiacaba.com.ar devuelven 525 desde el 17-ago-2026. El registro guarda el puntero, no la obra: mientras el servidor no vuelva, no hay nada para abrir. El catalogo ya no las cuenta como 'para abrir' ni ofrece el boton.",
+      "verificado": "2026-08-17"
+    },
+    {
+      "que": "Los nombres ANS no resuelven en el DNS",
+      "detalle": "ans.ar es NXDOMAIN, comuna1.ans.zone es NXDOMAIN y _ans.ans.zone (el syncPubKeyDomain que declara toda plantilla) tambien. El unico host de agente que contesta es comuna1.daiacaba.com.ar. Los nombres que arma el catalogo son un identificador propuesto, no una direccion que se pueda visitar, y el boton lo dice.",
       "verificado": "2026-08-17"
     },
     {
       "que": "La seccion Espacios verdes no tiene repo propio todavia",
-      "detalle": "Su declaracion vive en plantillas/ansgis.espacios-verdes.json de este mismo registro. Cuando tenga su repo copiado de emri-setup/seccion-plantilla, se completa el campo repo del agente comuna1.",
+      "detalle": "Su declaracion vive en plantillas/ansgis.espacios-verdes.json de este mismo registro, que es LA UNICA COPIA: la demo la lee de aca por URL en vez de guardar la suya. Cuando tenga su repo copiado de emri-setup/seccion-plantilla, se completa el campo repo del agente comuna1.",
       "verificado": "2026-08-17"
     },
     {
-      "que": "El porton no verifica agentes.json, solo plantillas/",
-      "detalle": "scripts/verificar.py de la maquinaria lee la carpeta plantillas/. Las capacidades que declara cada agente en este archivo se comprobaron a mano el 17-ago-2026 (las 8 dan 200 en el diccionario), pero no las controla la Action.",
+      "que": "La carta del agente habla otro vocabulario",
+      "detalle": "https://comuna1.daiacaba.com.ar/.well-known/agent-card.json declara capabilities como 'espacial.moran_local' o 'datos.usos_suelo', que no son funciones de R y no se pueden respaldar con el diccionario. El porton no las mira porque no estan en este archivo. Hasta que la carta declare paquete::funcion, la lista que vale es la de aca.",
       "verificado": "2026-08-17"
     },
     {

@@ -1,0 +1,102 @@
+name: Pedir el alta de una sección
+description: >-
+  Pedí que tu zona quede registrada con una de las secciones del catálogo.
+  El botón de universo.ans.zone abre este molde ya cargado con el nombre armado.
+title: "Alta: "
+labels: ["alta", "pedido"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## Esto es la entrada del circuito
+
+        **Antes de llenarlo, dos cosas que conviene saber, para que no haya sorpresa:**
+
+        - El nombre ANS que armaste es **un identificador propuesto, no una dirección**.
+          Hoy `ans.ar`, `comuna1.ans.zone` y `_ans.ans.zone` **no existen en el DNS**
+          (NXDOMAIN, verificado el 17-ago-2026). Nadie va a poder visitarlo todavía.
+        - El alta **la aprueba una persona**, a mano, en este repo. No hay automatismo:
+          cuando se acepta, tu zona entra en `agentes.json` y el portón empieza a
+          verificarle las capacidades contra el diccionario en cada cambio.
+
+        Si eso no te sirve así, mejor no lo pidas todavía — y decilo en el issue.
+
+  - type: input
+    id: nombre-ans
+    attributes:
+      label: El nombre ANS que armaste
+      description: Lo copia el botón del catálogo. Si llegaste directo, dejalo vacío.
+      placeholder: ans://v1.0.0.espacios-verdes-lanus.ans.zone
+    validations:
+      required: false
+
+  - type: input
+    id: zona
+    attributes:
+      label: Tu zona
+      description: La comuna, municipio o provincia que va a operar la sección.
+      placeholder: lanus
+    validations:
+      required: true
+
+  - type: dropdown
+    id: seccion
+    attributes:
+      label: Qué sección querés
+      description: >-
+        Son las que hoy tienen plantilla verificada en `plantillas/`. Si necesitás otra,
+        elegí "otra" y contá abajo qué tendría que calcular.
+      options:
+        - ansgis.espacios-verdes — cobertura de espacio verde por barrio
+        - ansgis.geoestadistica — interpolación y kriging
+        - otra (la explico abajo)
+    validations:
+      required: true
+
+  - type: input
+    id: quien
+    attributes:
+      label: Quién pide
+      description: >-
+        Organismo o persona responsable, y cómo contactarla. Es plata pública: el que
+        pide queda escrito.
+      placeholder: Secretaría de Ambiente, Municipio de Lanús — ambiente@lanus.gob.ar
+    validations:
+      required: true
+
+  - type: textarea
+    id: para-que
+    attributes:
+      label: Para qué la vas a usar
+      description: >-
+        Una decisión concreta que hoy se toma sin este número. Sirve para saber si la
+        sección tiene que existir o si ya hay una que sirve.
+      placeholder: >-
+        Priorizar dónde plantar en el presupuesto 2027. Hoy se reparte por barrio sin
+        medir cuánto verde por habitante tiene cada uno.
+    validations:
+      required: true
+
+  - type: textarea
+    id: datos
+    attributes:
+      label: Qué datos tenés
+      description: >-
+        Link al dataset abierto, o "no tengo". Sin el dato la sección corre igual, pero
+        contra los datos de otra jurisdicción y el resultado no es tuyo.
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: entendido
+    attributes:
+      label: Antes de mandar
+      options:
+        - label: >-
+            Entiendo que el nombre ANS todavía no resuelve en el DNS y que el alta la
+            aprueba una persona a mano.
+          required: true
+        - label: >-
+            Entiendo que cada resultado va a llevar su recibo público — qué función de R
+            lo calculó, con qué versión y con qué licencia.
+          required: true
