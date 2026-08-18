@@ -2,48 +2,70 @@
   "universo": "ansgis",
   "titulo": "ANS Universe",
   "descripcion": "El registro de agentes que hacen trabajo verificable sobre paquetes de R.",
-
   "$sobre_el_registro": "ans.daiacaba.com.ar/tl es un LOG DE REGISTRO DE AGENTES, no un libro de recibos. Solo acepta eventos de ciclo de vida de agente (AGENT_REGISTERED / ACTIVATED / DEPRECATED / REVOKED / RENEWED y CERT_REQUESTED / ISSUED / REVOKED). Ninguna obra ni ningun recibo esta anotado ahi, y con el spec ANS-4 de hoy no puede estarlo. Ver huecos[].",
   "registro_agentes": "https://ans.daiacaba.com.ar/tl",
   "diccionario": "https://diccionario.daiacaba.com.ar",
   "runiverse": "https://emri-setup.r-universe.dev",
   "verificado": "2026-08-17",
-
   "agentes": [
     {
       "id": "comuna1",
       "nombre": "Agente Comuna 1",
-
       "$sobre_el_nombre": "UN SOLO NOMBRE. Hasta el 17-ago-2026 este agente tenia tres: el log decia ans://v1.0.0.agente-comuna1.daiacaba.com.ar (ese host da 525 y nunca levanto), este archivo decia ans://v0.0.1.comuna1.ans.ar (ans.ar no existe: NXDOMAIN) y la demo decia comuna1.ans.zone (NXDOMAIN). El unico host que contesta es comuna1.daiacaba.com.ar, asi que el nombre se ancla ahi.",
       "ansName": "ans://v1.0.0.comuna1.daiacaba.com.ar",
       "nombres_viejos": [
-        { "ansName": "ans://v1.0.0.agente-comuna1.daiacaba.com.ar", "donde": "las 6 entradas del log", "host_hoy": 525 },
-        { "ansName": "ans://v0.0.1.comuna1.ans.ar", "donde": "este archivo hasta el 17-ago-2026", "host_hoy": "NXDOMAIN" }
+        {
+          "ansName": "ans://v1.0.0.agente-comuna1.daiacaba.com.ar",
+          "donde": "las 6 entradas del log",
+          "host_hoy": 525
+        },
+        {
+          "ansName": "ans://v0.0.1.comuna1.ans.ar",
+          "donde": "este archivo hasta el 17-ago-2026",
+          "host_hoy": "NXDOMAIN"
+        }
       ],
-
       "zona": "daiacaba",
       "que_es": "latido + carta + verificador",
       "descripcion": "Agente territorial de la Comuna 1 de la Ciudad de Buenos Aires. Publica su carta ANS, verifica identidad con el verificador oficial en wasm y late solo. NO ejecuta las capacidades de R que declara: esas las corre el taller y quedan en el recibo de cada obra.",
-
       "estado_url": "https://comuna1.daiacaba.com.ar/estado",
       "estado_http": 200,
       "carta_url": "https://comuna1.daiacaba.com.ar/.well-known/agent-card.json",
       "carta_http": 200,
       "estado_verificado": "2026-08-17",
-
       "plantilla": "ansgis.espacios-verdes",
       "repo": null,
-
       "$sobre_capacidades": "Son EXACTAMENTE las seis de plantillas/ansgis.espacios-verdes.json, ni una mas. El porton (scripts/verificar.py de ansgis-maquinaria) bloquea el PR si este agente se atribuye algo que su plantilla no declare. Antes declaraba spdep::localmoran y sf::st_buffer, que la seccion no declara, y omitia sf::st_read y sf::st_transform, que son dos de las tres que produjeron los numeros.",
       "capacidades": [
-        { "paquete": "sf", "funcion": "st_read" },
-        { "paquete": "sf", "funcion": "st_transform" },
-        { "paquete": "sf", "funcion": "st_area" },
-        { "paquete": "sf", "funcion": "st_intersection" },
-        { "paquete": "spdep", "funcion": "poly2nb" },
-        { "paquete": "spdep", "funcion": "moran.test" }
+        {
+          "paquete": "sf",
+          "funcion": "st_read"
+        },
+        {
+          "paquete": "sf",
+          "funcion": "st_transform"
+        },
+        {
+          "paquete": "sf",
+          "funcion": "st_area"
+        },
+        {
+          "paquete": "sf",
+          "funcion": "st_intersection"
+        },
+        {
+          "paquete": "spdep",
+          "funcion": "poly2nb"
+        },
+        {
+          "paquete": "spdep",
+          "funcion": "moran.test"
+        }
       ],
-      "obras": ["espacios-verdes", "tablero-espacios"]
+      "obras": [
+        "espacios-verdes",
+        "tablero-espacios"
+      ]
     },
     {
       "id": "geostat",
@@ -59,15 +81,26 @@
       "repo": "https://github.com/emri-setup/ansgis-geostat",
       "paquete": "ansgis.geostat",
       "capacidades": [
-        { "paquete": "gstat", "funcion": "krige" },
-        { "paquete": "gstat", "funcion": "variogram" },
-        { "paquete": "gstat", "funcion": "idw" },
-        { "paquete": "automap", "funcion": "autoKrige" }
+        {
+          "paquete": "gstat",
+          "funcion": "krige"
+        },
+        {
+          "paquete": "gstat",
+          "funcion": "variogram"
+        },
+        {
+          "paquete": "gstat",
+          "funcion": "idw"
+        },
+        {
+          "paquete": "automap",
+          "funcion": "autoKrige"
+        }
       ],
       "obras": []
     }
   ],
-
   "obras": [
     {
       "id": "espacios-verdes",
@@ -77,11 +110,14 @@
       "descripcion": "48 barrios y 2.176 espacios verdes. R recalcula la cobertura en el navegador del que consulta, sin servidor.",
       "fecha": "2026-07-31",
       "formato": "pagina web interactiva",
-      "estado": "caida",
+      "estado": "perdida",
       "estado_http": 525,
       "caida_desde": "2026-08-17",
       "estado_verificado": "2026-08-17",
-      "$se_puede_abrir": false
+      "$se_puede_abrir": false,
+      "url_estado": 525,
+      "motivo": "El servidor que la servia murio el 01-ago-2026 y el contenido no se recupero del respaldo. La obra existio y esta fecha lo prueba; hoy no se puede abrir.",
+      "verificado": "2026-08-18"
     },
     {
       "id": "tablero-espacios",
@@ -91,21 +127,52 @@
       "descripcion": "72 lineas de R Markdown convertidas en un tablero con 11 elementos y 16 acciones. Conformidad 73,4% contra el pliego de Esri Dashboards.",
       "fecha": "2026-08-01",
       "formato": "R Markdown renderizado",
-      "estado": "caida",
+      "estado": "perdida",
       "estado_http": 525,
       "caida_desde": "2026-08-17",
       "estado_verificado": "2026-08-17",
-      "$se_puede_abrir": false
+      "$se_puede_abrir": false,
+      "url_estado": 525,
+      "motivo": "El servidor que la servia murio el 01-ago-2026 y el contenido no se recupero del respaldo. La obra existio y esta fecha lo prueba; hoy no se puede abrir.",
+      "verificado": "2026-08-18"
+    },
+    {
+      "id": "comuna-1-cobertura-verde",
+      "titulo": "Cobertura de espacio verde por barrio — Comuna 1",
+      "agente": "comuna1",
+      "url": "https://demo.ans.zone/seccion-espacios-verdes/obras/comuna-1-cobertura-verde/entrega.html",
+      "descripcion": "387 espacios verdes, 325,88 ha, y el 86,28% concentrado en un solo barrio. Cada numero dice con que funcion de R se calculo.",
+      "fecha": "2026-08-15",
+      "formato": "pagina web interactiva",
+      "estado": "borrador",
+      "url_estado": 200,
+      "verificado": "2026-08-18",
+      "recibo": {
+        "capacidades": [
+          {
+            "paquete": "sf",
+            "funcion": "st_area"
+          },
+          {
+            "paquete": "sf",
+            "funcion": "st_intersection"
+          },
+          {
+            "paquete": "sf",
+            "funcion": "st_buffer"
+          }
+        ],
+        "anclado_en_el_registro": false,
+        "nota": "El log de ANS solo admite eventos de ciclo de vida de agente (#221): no existe un tipo de evento para una obra, asi que este recibo todavia no esta anotado ahi. Lo que si resiste una comprobacion independiente es el sha256 del entregable."
+      }
     }
   ],
-
   "$sobre_el_pedido": "El alta de una seccion se pide por issue en este mismo repo. El boton del catalogo (universo.ans.zone) arma el nombre ANS y abre el molde ya cargado. Es la unica entrada del circuito que existe hoy: no hay formulario ni buzon.",
   "pedido": {
     "canal": "issue",
     "url": "https://github.com/emri-setup/ansgis-registro/issues/new?template=alta-de-seccion.yml",
     "molde": ".github/ISSUE_TEMPLATE/alta-de-seccion.yml"
   },
-
   "huecos": [
     {
       "que": "El log de ANS no puede contener recibos de obra",
